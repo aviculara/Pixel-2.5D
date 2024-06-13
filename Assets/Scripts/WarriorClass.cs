@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class WarriorClass : MonoBehaviour
 {
-    
-    public bool player1, player2;
     public GameObject blueArrow;
     public Image swordIcon;
     private float swordSeconds=0;
@@ -14,15 +12,15 @@ public class WarriorClass : MonoBehaviour
     
     public Image ultIcon;
     private float ultSeconds = 0;
-    //found in script:
-    //public PlayerMove enemyMoveScr;
-    public PlayerMove moveScr;
+
+    public Move moveScr;
     private int jumpforce;
     private bool cooldownAtk=false;
     private bool cooldownUlt=false;
     public Collider2D enemyCollider;
 
     private Sword sword;
+
     [Header("Editor")]
     public int swordDamage = 20;
     public float shieldMultiplier = 0.2f;
@@ -32,21 +30,13 @@ public class WarriorClass : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        moveScr = transform.GetComponent<PlayerMove>();
-        moveScr.Class = "Warrior";
-        sword = transform.GetChild(0).GetComponent<Sword>();
-        if (moveScr.player1)
-        {
-            player1 = true;
-            player2 = false;
-        }
-        else if(moveScr.player2)
-        {
-            player1 = false;
-            player2 = true;
-        }
-        jumpforce = moveScr.jumpForce;
+        moveScr = transform.GetComponent<Move>();
+        moveScr.playerClass = Move.Class.Warrior;
+        //sword = transform.GetChild(0).GetComponent<Sword>();
+
         shieldIcon.fillAmount = 0;
+        ultIcon.fillAmount = 0;
+        swordIcon.fillAmount = 0;
     }
 
     // Update is called once per frame
@@ -54,7 +44,7 @@ public class WarriorClass : MonoBehaviour
     {
         if(swordSeconds>0)
         {
-            swordSeconds -= Time.deltaTime ;
+            swordSeconds -= Time.unscaledDeltaTime ;
         }
         swordIcon.fillAmount = swordSeconds / cdAtk;
         if(ultSeconds>0)
@@ -68,8 +58,7 @@ public class WarriorClass : MonoBehaviour
             {
                 moveScr.animator.SetBool("Shield", true);
                 shieldIcon.fillAmount = 1;
-                moveScr.jumpForce = 0;
-                moveScr.damageMultiplier = shieldMultiplier;
+                moveScr.defenseModifier = shieldMultiplier;
             }
 
             else if (InputAttack() && !cooldownAtk)
@@ -81,8 +70,7 @@ public class WarriorClass : MonoBehaviour
             {
                 moveScr.animator.SetBool("Shield", false);
                 shieldIcon.fillAmount = 0;
-                moveScr.jumpForce = jumpforce;
-                moveScr.damageMultiplier = 1f;
+                moveScr.defenseModifier = 1f;
             }
             else if (InputSpecial() && !cooldownUlt)
             {
@@ -94,11 +82,7 @@ public class WarriorClass : MonoBehaviour
     #region Inputs
     private bool InputAttack()
     {
-        if (player1 && Input.GetKeyDown(KeyCode.E))
-        {
-            return true;
-        }
-        else if (player2 && Input.GetKeyDown(KeyCode.RightControl))
+        if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             return true;
         }
@@ -107,11 +91,7 @@ public class WarriorClass : MonoBehaviour
 
     private bool InputSecondary()
     {
-        if (player1 && Input.GetKey(KeyCode.Alpha3))
-        {
-            return true;
-        }
-        else if (player2 && Input.GetKey(KeyCode.RightShift))
+        if (Input.GetKey(KeyCode.Mouse1))
         {
             return true;
         }
@@ -119,11 +99,7 @@ public class WarriorClass : MonoBehaviour
     }
     private bool InputSpecial()
     {
-        if (player1 && Input.GetKeyDown(KeyCode.F))
-        {
-            return true;
-        }
-        else if (player2 && Input.GetKeyDown(KeyCode.Slash)) //US klavyeye cevirmek lazim
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             return true;
         }
@@ -154,21 +130,21 @@ public class WarriorClass : MonoBehaviour
         ultSeconds = cdUlt;
         moveScr.animator.SetTrigger("Attack");
         GameObject newArrow = Instantiate(blueArrow,
-            new Vector3(transform.position.x + 0.4f * moveScr.orientation
+            new Vector3(transform.position.x + 0.4f //* moveScr.orientation
             , transform.position.y + 0.2f, transform.position.z),
             Quaternion.identity);
         Arrow arrowScript = newArrow.GetComponent<Arrow>();
         arrowScript.orientation = gameObject.GetComponent<PlayerMove>().orientation;
         arrowScript.arrowDamage = ultDamage;
 
-        if (player1)
-        {
-            newArrow.GetComponent<Arrow>().enemyTag = "PlayerTwo";
-        }
-        else if (player2)
-        {
-            newArrow.GetComponent<Arrow>().enemyTag = "PlayerOne";
-        }
+        //if (player1)
+        //{
+        //    newArrow.GetComponent<Arrow>().enemyTag = "PlayerTwo";
+        //}
+        //else if (player2)
+        //{
+        //    newArrow.GetComponent<Arrow>().enemyTag = "PlayerOne";
+        //}
         newArrow.SetActive(true);
         yield return new WaitForSeconds(cdUlt);
         ultSeconds = 0;

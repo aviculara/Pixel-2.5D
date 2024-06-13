@@ -2,10 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TempMove : MonoBehaviour
+public class Move : MonoBehaviour
 {
     public int runSpeed = 5;
-    [SerializeField] Animator animator;
+    public Class playerClass;
+    public Animator animator;
+    public bool inputOn;
+
+    public float defenseModifier;
 
     // Start is called before the first frame update
     void Start()
@@ -43,5 +47,11 @@ public class TempMove : MonoBehaviour
             animator.SetBool("walkDown", true);
         }
         else { animator.SetBool("walkDown", false); }
+    }
+
+    public enum Class
+    {
+        Warrior,
+        Ranger
     }
 }
