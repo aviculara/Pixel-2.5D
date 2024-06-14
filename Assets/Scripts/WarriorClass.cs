@@ -5,76 +5,85 @@ using UnityEngine.UI;
 
 public class WarriorClass : MonoBehaviour
 {
-    public GameObject blueArrow;
-    public Image swordIcon;
-    private float swordSeconds=0;
-    public Image shieldIcon;
-    
-    public Image ultIcon;
-    private float ultSeconds = 0;
-
-    public Move moveScr;
-    private int jumpforce;
-    private bool cooldownAtk=false;
-    private bool cooldownUlt=false;
+    private Move moveScr;
+    private Animator animator; //assigned in script
+    public bool inputOn;
     public Collider2D enemyCollider;
 
+    [Header("Attack")]
     private Sword sword;
+    public GameObject blueArrow;
+    public Image swordIcon;
+    private float swordCooldownLeft=0;
+
+    [Header("Shield")]
+    public Image shieldIcon;
+    private bool shieldActive;
+    
+    [Header("Special Attack")]
+    public Image specialIcon;
+    private float specialCooldownLeft = 0;
 
     [Header("Editor")]
     public int swordDamage = 20;
     public float shieldMultiplier = 0.2f;
-    public int ultDamage = 40;
-    public float cdUlt = 5.4f;
-    public float cdAtk = 0.45f;
+    public int specialDamage = 40;
+    public float specialCooldown = 5.4f;
+    public float atkCooldown = 0.45f;
     // Start is called before the first frame update
     void Start()
     {
-        moveScr = transform.GetComponent<Move>();
+        moveScr = GetComponent<Move>();
         moveScr.playerClass = Move.Class.Warrior;
+        animator = moveScr.animator;
         //sword = transform.GetChild(0).GetComponent<Sword>();
 
         shieldIcon.fillAmount = 0;
-        ultIcon.fillAmount = 0;
+        specialIcon.fillAmount = 0;
         swordIcon.fillAmount = 0;
+
+        inputOn = true; //temp
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(swordSeconds>0)
+        if(swordCooldownLeft>0)
         {
-            swordSeconds -= Time.unscaledDeltaTime ;
+            swordCooldownLeft -= Time.unscaledDeltaTime ;
         }
-        swordIcon.fillAmount = swordSeconds / cdAtk;
-        if(ultSeconds>0)
+        swordIcon.fillAmount = swordCooldownLeft / atkCooldown;
+        if(specialCooldownLeft>0)
         {
-            ultSeconds -= Time.deltaTime;
+            specialCooldownLeft -= Time.deltaTime;
         }
-        ultIcon.fillAmount = ultSeconds/ cdUlt;
-        if (moveScr.inputOn)
+        specialIcon.fillAmount = specialCooldownLeft/ specialCooldown;
+        
+        if(inputOn)
         {
-            if (InputSecondary())
+            if(InputSecondary())
             {
-                moveScr.animator.SetBool("Shield", true);
-                shieldIcon.fillAmount = 1;
-                moveScr.defenseModifier = shieldMultiplier;
+                if(!shieldActive)
+                {
+                    animator.SetBool("Shield", true);
+                    shieldActive = true;
+                    shieldIcon.fillAmount = 1;
+                }
+                
             }
-
-            else if (InputAttack() && !cooldownAtk)
+            else if(InputAttack() && swordCooldownLeft <= 0)
             {
-                StartCoroutine(Attack());
+                Attack();
             }
-
-            else if (moveScr.animator.GetBool("Shield"))
+            else if(InputSpecial() && specialCooldownLeft <=0)
             {
-                moveScr.animator.SetBool("Shield", false);
+                SpecialAttack();
+            }
+            if(!InputSecondary() && shieldActive)
+            {
+                shieldActive = false;
+                animator.SetBool("Shield", false);
                 shieldIcon.fillAmount = 0;
-                moveScr.defenseModifier = 1f;
-            }
-            else if (InputSpecial() && !cooldownUlt)
-            {
-                StartCoroutine(SpecialAttack());
             }
         }
     }
@@ -107,27 +116,43 @@ public class WarriorClass : MonoBehaviour
     }
     #endregion
 
-    IEnumerator Attack()
+    private void Attack()
     {
-        cooldownAtk = true;
-        swordSeconds = cdAtk;
+        swordCooldownLeft = atkCooldown;
+        //handle colliders in the sword script
+        animator.SetTrigger("Attack");
+    }
+
+    private void SpecialAttack()
+    {
+        specialCooldownLeft = specialCooldown;
+        animator.SetTrigger("Attack");
+        //Instantiate blue arrow
+    }
+
+    #region old warrior
+    IEnumerator oldAttack()
+    {
+        //cooldownAtk = true;
+        swordCooldownLeft = atkCooldown;
         moveScr.animator.SetTrigger("Attack");
         if (sword.inRange)
         {
-            enemyCollider.GetComponent<PlayerMove>().takeDamage(swordDamage);
+            //enemyCollider.GetComponent<PlayerMove>().takeDamage(swordDamage);
             //find better efficiency in sword
             //enemyCollider.gameObject.GetComponent<PlayerMove>().hp -= swordDamage;
             //enemyCollider.gameObject.GetComponent<SpriteRenderer>().color = new Color(255f, 87f, 87f, 255f);
+            print("damage enemy");
         }
-        yield return new WaitForSeconds(cdAtk);
-        cooldownAtk = false;
-        swordSeconds = 0;
+        yield return new WaitForSeconds(atkCooldown);
+        //cooldownAtk = false;
+        swordCooldownLeft = 0;
     }
 
-    IEnumerator SpecialAttack()
+    IEnumerator oldSpecialAttack()
     {
-        cooldownUlt = true;
-        ultSeconds = cdUlt;
+        //cooldownUlt = true;
+        specialCooldownLeft = specialCooldown;
         moveScr.animator.SetTrigger("Attack");
         GameObject newArrow = Instantiate(blueArrow,
             new Vector3(transform.position.x + 0.4f //* moveScr.orientation
@@ -135,7 +160,7 @@ public class WarriorClass : MonoBehaviour
             Quaternion.identity);
         Arrow arrowScript = newArrow.GetComponent<Arrow>();
         arrowScript.orientation = gameObject.GetComponent<PlayerMove>().orientation;
-        arrowScript.arrowDamage = ultDamage;
+        arrowScript.arrowDamage = specialDamage;
 
         //if (player1)
         //{
@@ -146,9 +171,11 @@ public class WarriorClass : MonoBehaviour
         //    newArrow.GetComponent<Arrow>().enemyTag = "PlayerOne";
         //}
         newArrow.SetActive(true);
-        yield return new WaitForSeconds(cdUlt);
-        ultSeconds = 0;
-        cooldownUlt = false;
+        yield return new WaitForSeconds(specialCooldown);
+        specialCooldownLeft = 0;
+        //cooldownUlt = false;
     }
-    
+    #endregion
+
+
 }
