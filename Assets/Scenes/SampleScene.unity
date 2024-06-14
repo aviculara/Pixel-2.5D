@@ -150,7 +150,7 @@ Animator:
   m_GameObject: {fileID: 8970580}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 5284ec956f83e5642b7069c03372a0b6, type: 2}
+  m_Controller: {fileID: 9100000, guid: de9e8f808b0cf02439160c3b3ed0da2e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -511,6 +511,8 @@ MonoBehaviour:
   runSpeed: 5
   playerClass: 0
   animator: {fileID: 8970583}
+  direction: 0
+  walking: 0
   inputOn: 1
   defenseModifier: 0
 --- !u!54 &370308620
