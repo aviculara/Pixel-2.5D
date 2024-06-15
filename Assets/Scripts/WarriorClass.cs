@@ -55,7 +55,7 @@ public class WarriorClass : MonoBehaviour
         swordIcon.fillAmount = swordCooldownLeft / atkCooldown;
         if(specialCooldownLeft>0)
         {
-            specialCooldownLeft -= Time.deltaTime;
+            specialCooldownLeft -= Time.unscaledDeltaTime;
         }
         specialIcon.fillAmount = specialCooldownLeft/ specialCooldown;
         
