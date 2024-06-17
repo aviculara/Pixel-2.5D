@@ -91,7 +91,7 @@ public class WarriorClass : MonoBehaviour
     #region Inputs
     private bool InputAttack()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.E))
         {
             return true;
         }
