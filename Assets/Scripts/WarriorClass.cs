@@ -12,7 +12,6 @@ public class WarriorClass : MonoBehaviour
 
     [Header("Attack")]
     private Sword sword;
-    public GameObject blueArrow;
     public Image swordIcon;
     private float swordCooldownLeft=0;
 
@@ -23,6 +22,7 @@ public class WarriorClass : MonoBehaviour
     [Header("Special Attack")]
     public Image specialIcon;
     private float specialCooldownLeft = 0;
+    public GameObject horizontalArrow,upArrow,downArrow;
 
     [Header("Editor")]
     public int swordDamage = 20;
@@ -127,6 +127,34 @@ public class WarriorClass : MonoBehaviour
     {
         specialCooldownLeft = specialCooldown;
         animator.SetTrigger("Attack");
+        int direction = moveScr.direction;
+        GameObject newArrow = null;
+        switch (direction)
+        {
+            case 0:
+                newArrow = Instantiate(horizontalArrow, gameObject.transform.position, Quaternion.identity);
+                break;
+            case 1:
+                newArrow = Instantiate(downArrow, gameObject.transform.position, Quaternion.identity);
+                break;
+            case 2:
+                //newArrow = Instantiate(leftArrow, gameObject.transform.position, Quaternion.identity);
+                break;
+            case 3:
+                newArrow = Instantiate(upArrow, gameObject.transform.position, Quaternion.identity);
+                break;
+        }
+        if(newArrow != null)
+        {
+            newArrow.SetActive(true);
+            Destroy(newArrow, 5f);
+        }
+        else
+        {
+#if UNITY_EDITOR
+            print("invalid direction");
+#endif
+        }
         //Instantiate blue arrow
     }
 
@@ -154,7 +182,7 @@ public class WarriorClass : MonoBehaviour
         //cooldownUlt = true;
         specialCooldownLeft = specialCooldown;
         moveScr.animator.SetTrigger("Attack");
-        GameObject newArrow = Instantiate(blueArrow,
+        GameObject newArrow = Instantiate(horizontalArrow,
             new Vector3(transform.position.x + 0.4f //* moveScr.orientation
             , transform.position.y + 0.2f, transform.position.z),
             Quaternion.identity);
