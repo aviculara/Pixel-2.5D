@@ -4,22 +4,13 @@ using UnityEngine;
 
 public class Sword : MonoBehaviour
 {
-    public bool player1, player2;
+
     public bool inRange = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        if(transform.parent.CompareTag("PlayerOne"))
-        {
-            player1 = true;
-            player2 = false;
-        }
-        else if(transform.parent.CompareTag("PlayerTwo"))
-        {
-            player2 = true;
-            player1 = false;
-        }
+
     }
 
     // Update is called once per frame
@@ -27,22 +18,21 @@ public class Sword : MonoBehaviour
     {
         
     }
-    private void OnTriggerEnter2D(Collider2D other)
+
+    private void OnTriggerEnter(Collider other)
     {
-        if ((player1 && other.gameObject.CompareTag("PlayerTwo")) || (player2 && other.gameObject.CompareTag("PlayerOne")))
+        if(other.CompareTag("Enemy"))
         {
-            inRange = true;
-            transform.parent.GetComponent<WarriorClass>().enemyCollider = other;
+            print("enemy enter");
         }
-        
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    private void OnTriggerExit(Collider other)
     {
-        if ((player1 && other.gameObject.CompareTag("PlayerTwo")) || (player2 && other.gameObject.CompareTag("PlayerOne")))
+        if(other.CompareTag("Enemy"))
         {
-            inRange = false;
-        }
+            print("enemy exit");
+        }        
     }
 
 }
