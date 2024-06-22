@@ -7,17 +7,18 @@ public class Arrow : MonoBehaviour
     public string enemyTag;
     public int fireSpeed;
     public int arrowDamage;
-    public int orientation;
+    public int direction;
+    private Vector3 directionVector = new Vector3(0,0,0);
     // Start is called before the first frame update
     void Start()
     {
-        print("fix speed direction");
+      
     }
 
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.right * Time.deltaTime * fireSpeed);
+        transform.Translate(directionVector * Time.deltaTime * fireSpeed);
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -46,4 +47,26 @@ public class Arrow : MonoBehaviour
         //    transform.localScale.y, transform.localScale.z);
     }
 
+    public void SetDirection(int playerDirection)
+    {
+        switch (playerDirection)
+        {
+            case 0:
+                //right
+                directionVector = Vector3.right;
+                break;
+            case 1:
+                //down
+                directionVector = Vector3.forward * (-1);
+                break;
+            case 2:
+                //left
+                directionVector = Vector3.left;
+                break;
+            case 3:
+                //up
+                directionVector = Vector3.forward;
+                break;
+        }
+    }
 }

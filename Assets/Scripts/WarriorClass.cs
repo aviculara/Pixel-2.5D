@@ -22,7 +22,8 @@ public class WarriorClass : MonoBehaviour
     [Header("Special Attack")]
     public Image specialIcon;
     private float specialCooldownLeft = 0;
-    public GameObject horizontalArrow,upArrow,downArrow;
+    public GameObject rightArrow,downArrow,leftArrow,upArrow;
+    [SerializeField] float yOffset, xOffset;
 
     [Header("Editor")]
     public int swordDamage = 20;
@@ -41,6 +42,11 @@ public class WarriorClass : MonoBehaviour
         shieldIcon.fillAmount = 0;
         specialIcon.fillAmount = 0;
         swordIcon.fillAmount = 0;
+
+        rightArrow.SetActive(false);
+        downArrow.SetActive(false);
+        leftArrow.SetActive(false);
+        upArrow.SetActive(false);
 
         inputOn = true; //temp
     }
@@ -131,21 +137,26 @@ public class WarriorClass : MonoBehaviour
         GameObject newArrow = null;
         switch (direction)
         {
-            case 0:
-                newArrow = Instantiate(horizontalArrow, gameObject.transform.position, Quaternion.identity);
+            case 0: //right
+                newArrow = Instantiate(rightArrow, new Vector3(transform.position.x + 0.4f,
+                transform.position.y + 0.0f, transform.position.z), Quaternion.identity);
                 break;
-            case 1:
-                newArrow = Instantiate(downArrow, gameObject.transform.position, Quaternion.identity);
+            case 1: //down
+                newArrow = Instantiate(downArrow, new Vector3(transform.position.x + 0.05f,
+                transform.position.y - 0.5f, transform.position.z), Quaternion.identity);
                 break;
-            case 2:
-                //newArrow = Instantiate(leftArrow, gameObject.transform.position, Quaternion.identity);
+            case 2: //left
+                newArrow = Instantiate(leftArrow, new Vector3(transform.position.x - 0.4f,
+                transform.position.y + 0.0f, transform.position.z), Quaternion.identity);
                 break;
-            case 3:
-                newArrow = Instantiate(upArrow, gameObject.transform.position, Quaternion.identity);
+            case 3: //up
+                newArrow = Instantiate(upArrow, new Vector3(transform.position.x + 0.1f,
+                transform.position.y + 0.7f, transform.position.z), Quaternion.identity);
                 break;
         }
         if(newArrow != null)
         {
+            newArrow.GetComponent<Arrow>().SetDirection(direction);
             newArrow.SetActive(true);
             Destroy(newArrow, 5f);
         }
@@ -182,12 +193,12 @@ public class WarriorClass : MonoBehaviour
         //cooldownUlt = true;
         specialCooldownLeft = specialCooldown;
         moveScr.animator.SetTrigger("Attack");
-        GameObject newArrow = Instantiate(horizontalArrow,
+        GameObject newArrow = Instantiate(rightArrow,
             new Vector3(transform.position.x + 0.4f //* moveScr.orientation
             , transform.position.y + 0.2f, transform.position.z),
             Quaternion.identity);
         Arrow arrowScript = newArrow.GetComponent<Arrow>();
-        arrowScript.orientation = gameObject.GetComponent<PlayerMove>().orientation;
+        //arrowScript.orientation = gameObject.GetComponent<PlayerMove>().orientation;
         arrowScript.arrowDamage = specialDamage;
 
         //if (player1)

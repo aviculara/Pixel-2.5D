@@ -137,7 +137,7 @@ public class RangerClass : MonoBehaviour
             , transform.position.y - 0.7f, transform.position.z),
             Quaternion.identity);
         Arrow arrowScript = newArrow.GetComponent<Arrow>();
-        arrowScript.orientation = moveScr.orientation;
+        //arrowScript.orientation = moveScr.orientation;
         arrowScript.arrowDamage = this.arrowDamage;
         if (player1)
         {
@@ -209,7 +209,7 @@ public class RangerClass : MonoBehaviour
             , transform.position.y - 0.7f, transform.position.z),
             Quaternion.identity);
         Arrow arrowScript = newArrow.GetComponent<Arrow>();
-        arrowScript.orientation = moveScr.orientation;
+        //arrowScript.orientation = moveScr.orientation;
         arrowScript.arrowDamage = ultDamage;
 
         if (player1)
