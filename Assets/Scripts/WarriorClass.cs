@@ -12,6 +12,7 @@ public class WarriorClass : MonoBehaviour
 
     [Header("Attack")]
     private Sword sword;
+    public Sword[] swords; //dir = index
     public Image swordIcon;
     private float swordCooldownLeft=0;
 
@@ -125,7 +126,10 @@ public class WarriorClass : MonoBehaviour
     private void Attack()
     {
         swordCooldownLeft = atkCooldown;
-        //handle colliders in the sword script
+        //sword in the right direction = swords[move.direction]
+        Sword currentSword = swords[moveScr.direction];
+        currentSword.DamageEnemies(swordDamage);
+        //if in range, enemy game object.damage
         animator.SetTrigger("Attack");
     }
 
@@ -135,6 +139,7 @@ public class WarriorClass : MonoBehaviour
         animator.SetTrigger("Attack");
         int direction = moveScr.direction;
         GameObject newArrow = null;
+        //Instantiate blue arrow
         switch (direction)
         {
             case 0: //right
@@ -166,7 +171,6 @@ public class WarriorClass : MonoBehaviour
             print("invalid direction");
 #endif
         }
-        //Instantiate blue arrow
     }
 
     #region old warrior

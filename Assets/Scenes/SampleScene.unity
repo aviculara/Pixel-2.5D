@@ -549,7 +549,6 @@ GameObject:
   - component: {fileID: 243935535}
   - component: {fileID: 243935538}
   - component: {fileID: 243935537}
-  - component: {fileID: 243935536}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -572,27 +571,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1468442857}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &243935536
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 243935534}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!23 &243935537
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -793,6 +771,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputOn: 0
   enemyCollider: {fileID: 0}
+  swords:
+  - {fileID: 1588688214}
+  - {fileID: 1973068792}
+  - {fileID: 433801165}
+  - {fileID: 1092597412}
   swordIcon: {fileID: 1026936797}
   shieldIcon: {fileID: 1923295342}
   specialIcon: {fileID: 56314298}
@@ -1030,6 +1013,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inRange: 0
+  enemyObject: {fileID: 0}
+  enemiesInRange: []
   dir: left
 --- !u!135 &433801166
 SphereCollider:
@@ -1859,6 +1844,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inRange: 0
+  enemyObject: {fileID: 0}
+  enemiesInRange: []
   dir: up
 --- !u!135 &1092597413
 SphereCollider:
@@ -2437,9 +2424,9 @@ Transform:
   m_Children:
   - {fileID: 243935535}
   - {fileID: 1588688213}
-  - {fileID: 433801164}
-  - {fileID: 1092597411}
   - {fileID: 1973068791}
+  - {fileID: 1092597411}
+  - {fileID: 433801164}
   m_Father: {fileID: 370308618}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &1468442858
@@ -2799,6 +2786,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inRange: 0
+  enemyObject: {fileID: 0}
+  enemiesInRange: []
   dir: right
 --- !u!135 &1588688215
 SphereCollider:
@@ -5986,6 +5975,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inRange: 0
+  enemyObject: {fileID: 0}
+  enemiesInRange: []
   dir: down
 --- !u!135 &1973068793
 SphereCollider:
