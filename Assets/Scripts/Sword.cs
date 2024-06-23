@@ -6,7 +6,7 @@ public class Sword : MonoBehaviour
 {
 
     public bool inRange = false;
-
+    public string dir;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,7 +23,8 @@ public class Sword : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
-            print("enemy enter");
+            print("enemy enter " + dir);
+            inRange = true;
         }
     }
 
@@ -31,7 +32,8 @@ public class Sword : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
-            print("enemy exit");
+            print("enemy exit " + dir);
+            inRange = false;
         }        
     }
 
