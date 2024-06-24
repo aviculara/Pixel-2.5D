@@ -16,7 +16,7 @@ public class RangerClass : MonoBehaviour
     private float ultSeconds=0;
 
     public Collider2D enemyCollider;
-    public PlayerMove moveScr;
+    public Move moveScr;
     private bool vanishing=false;
     private int OGrunspeed, OGjumpforce;
     private bool cooldown2nd = false;
@@ -33,19 +33,9 @@ public class RangerClass : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        moveScr = transform.GetComponent<PlayerMove>();
-        moveScr.Class = "Ranger";
-        if (moveScr.player1)
-        {
-            player1 = true;
-            player2 = false;
-        }
-        else if (moveScr.player2)
-        {
-            player1 = false;
-            player2 = true;
-        }
-        OGjumpforce = moveScr.jumpForce;
+        moveScr = transform.GetComponent<Move>();
+        //moveScr.Class = "Ranger";
+
         OGrunspeed = moveScr.runSpeed;
     }
 
@@ -133,7 +123,7 @@ public class RangerClass : MonoBehaviour
         arrowSeconds = cdAtk;
         moveScr.animator.SetTrigger("Attack");
         GameObject newArrow = Instantiate(sampleArrow,
-            new Vector3(transform.position.x - 0.48f * moveScr.orientation
+            new Vector3(transform.position.x - 0.48f 
             , transform.position.y - 0.7f, transform.position.z),
             Quaternion.identity);
         Arrow arrowScript = newArrow.GetComponent<Arrow>();
@@ -163,14 +153,14 @@ public class RangerClass : MonoBehaviour
         vanishSeconds = cd2nd;
         moveScr.runSpeed = (int)(OGrunspeed * vanishMultiplier);
         //moveScr.jumpForce = 0;
-        moveScr.damageMultiplier = 0;
+        moveScr.defenseModifier = 0;
         yield return new WaitForSeconds(1f);
         //moveScr.animator.SetBool("Vanish", false);
         vanishing = false;
         playerSprite.color = new Color(1f, 1f, 1f, 1f);
         moveScr.runSpeed = OGrunspeed;
         //moveScr.jumpForce = OGjumpforce;
-        moveScr.damageMultiplier = 1;
+        moveScr.defenseModifier = 1;
         //StartCoroutine(CooldownVanish());
         cooldown2nd = true;
         yield return new WaitForSeconds(cd2nd);
@@ -205,21 +195,13 @@ public class RangerClass : MonoBehaviour
     private void newGreenArrow()
     {
         GameObject newArrow = Instantiate(greenArrow,
-            new Vector3(transform.position.x - 0.48f * moveScr.orientation
+            new Vector3(transform.position.x - 0.48f
             , transform.position.y - 0.7f, transform.position.z),
             Quaternion.identity);
         Arrow arrowScript = newArrow.GetComponent<Arrow>();
         //arrowScript.orientation = moveScr.orientation;
         arrowScript.arrowDamage = ultDamage;
 
-        if (player1)
-        {
-            arrowScript.enemyTag = "PlayerTwo";
-        }
-        else if (player2)
-        {
-            arrowScript.enemyTag = "PlayerOne";
-        }
         newArrow.SetActive(true);
     }
 

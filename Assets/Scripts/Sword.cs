@@ -8,7 +8,7 @@ public class Sword : MonoBehaviour
     public bool inRange = false;
     public GameObject enemyObject;
     public List<GameObject> enemiesInRange = new List<GameObject>();
-    public string dir;
+    //public string dir;
 
     // Start is called before the first frame update
     void Start()
@@ -26,7 +26,6 @@ public class Sword : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
-            print("enemy enter " + dir);
             enemiesInRange.Add(other.gameObject);
         }
     }
@@ -35,7 +34,6 @@ public class Sword : MonoBehaviour
     {
         if(other.CompareTag("Enemy"))
         {
-            print("enemy exit " + dir);
             enemiesInRange.Remove(other.gameObject);
         }        
     }
