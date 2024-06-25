@@ -8,20 +8,29 @@ public class InventoryManager : MonoBehaviour
     public InventorySlot[] inventory; //array, fixed size
     public int[] itemCount = new int[5];
     public GameObject inventoryIconPrefab;
-
+    public RectTransform selectionBorder;
+    public RectTransform parent;
     [SerializeField] private int maxStack = 9;
 
-    public bool fork, pencil, notebook = false;
+    int selectedSlot = 0;
+    
 
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SelectSlot(0);
+        }
+        else if(Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SelectSlot(1);
+        }
     }
 
     public bool FindEmptySlot(ItemScriptable item)
@@ -66,6 +75,16 @@ public class InventoryManager : MonoBehaviour
         GameObject newItem = Instantiate(inventoryIconPrefab, slot.transform);
         ItemIcon newItemIcon = newItem.GetComponent<ItemIcon>();
         newItemIcon.InitialiseItem(item);
+    }
+
+    public void SelectSlot(int newSlot)
+    {
+        //deselect old slot
+        inventory[selectedSlot].DeselectSlot();
+        //select new slot
+        inventory[newSlot].SelectSlot();
+        //add if check
+        selectedSlot = newSlot;
     }
 
 }
