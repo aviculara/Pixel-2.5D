@@ -18,7 +18,6 @@ public class ItemIcon : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     public Image image;
     //public Image smallerImage;
     public TextMeshProUGUI countText;
-    public GameObject selectionBorder;
 
     public void InitialiseItem(ItemScriptable item)
     {
@@ -64,7 +63,6 @@ public class ItemIcon : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
     {
         //image = GetComponent<Image>();
         //smallerImage = transform.GetChild(0).GetComponent<Image>();
-        Deselect();
     }
 
     private void Start()
@@ -82,15 +80,4 @@ public class ItemIcon : MonoBehaviour, IBeginDragHandler, IEndDragHandler, IDrag
         }
         countText.text = count.ToString();
     }
-
-    public void Deselect()
-    {
-        selectionBorder.SetActive(false);
-    }
-
-    public void Select()
-    {
-        selectionBorder.SetActive(true);
-    }
-
 }

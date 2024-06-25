@@ -5,13 +5,16 @@ using UnityEngine.EventSystems;
 
 public class InventorySlot : MonoBehaviour, IDropHandler
 {
+    [SerializeField] Transform gridGroup;
+    [SerializeField] GameObject selectionBorder;
+
     public void OnDrop(PointerEventData eventData)
     {
         print("drop");
-        if (transform.childCount == 0)
+        if (gridGroup.childCount == 0)
         {
             ItemIcon draggedItem = eventData.pointerDrag.GetComponent<ItemIcon>();
-            draggedItem.parentAfterDrag = transform;
+            draggedItem.parentAfterDrag = gridGroup;
         }
         else
         {
@@ -19,29 +22,33 @@ public class InventorySlot : MonoBehaviour, IDropHandler
             ItemIcon draggedItem = eventData.pointerDrag.GetComponent<ItemIcon>();
             //get current child into inventoryItem's position
             Transform oldParent = eventData.pointerDrag.GetComponent<ItemIcon>().parentAfterDrag;
-            transform.GetChild(0).transform.SetParent(oldParent);
-            draggedItem.parentAfterDrag = transform; //yes
+            gridGroup.GetChild(0).transform.SetParent(oldParent);
+            draggedItem.parentAfterDrag = gridGroup; 
         }
     }
 
-    public void DeselectSlot()
+    public void Deselect()
     {
-        ItemIcon itemInSlot = GetComponentInChildren<ItemIcon>();
-        if (itemInSlot!= null)
-        {
-            itemInSlot.Deselect();
-        }
+        //ItemIcon itemInSlot = GetComponentInChildren<ItemIcon>();
+        //if (itemInSlot!= null)
+        //{
+        //    itemInSlot.Deselect();
+        //}
+        selectionBorder.SetActive(false);
     }
 
-    public bool SelectSlot()
+    public bool Select()
     {
-        ItemIcon itemInSlot = GetComponentInChildren<ItemIcon>();
-        if (itemInSlot != null)
-        {
-            itemInSlot.Select();
-            return true;
-        }
-        return false;
+        //ItemIcon itemInSlot = GetComponentInChildren<ItemIcon>();
+        //if (itemInSlot != null)
+        //{
+        //    itemInSlot.Select();
+        //    return true;
+        //}
+        //print("no item in slot");
+        //return false;        
+        selectionBorder.SetActive(true);
+        return true;
     }
 
 }
