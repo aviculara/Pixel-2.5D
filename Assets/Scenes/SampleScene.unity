@@ -1411,7 +1411,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runSpeed: 5
-  playerClass: 0
   animator: {fileID: 8970583}
   direction: 0
   walking: 0
@@ -1521,6 +1520,8 @@ MonoBehaviour:
   defendIcon: {fileID: 676764042}
   specialIcon: {fileID: 2136819054}
   canMove: 1
+  playerClass: 0
+  mineIcon: {fileID: 1205433995}
 --- !u!1001 &373536596
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4575,7 +4576,7 @@ GameObject:
   - component: {fileID: 1205433996}
   - component: {fileID: 1205433995}
   m_Layer: 5
-  m_Name: Attack Cooldown
+  m_Name: Pickaxe Cooldown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5670,7 +5671,7 @@ GameObject:
   - component: {fileID: 1533299083}
   - component: {fileID: 1533299082}
   m_Layer: 5
-  m_Name: Attack Cooldown
+  m_Name: Axe Cooldown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -5,7 +5,6 @@ using UnityEngine;
 public class Move : MonoBehaviour
 {
     public int runSpeed = 5;
-    public Class playerClass;
     public Animator animator;
     public int direction = 0;
     public bool walking = false;
@@ -100,11 +99,4 @@ public class Move : MonoBehaviour
             }
         }        
     }
-
-    public enum Class
-    {
-        Warrior,
-        Ranger
-    }
-
 }

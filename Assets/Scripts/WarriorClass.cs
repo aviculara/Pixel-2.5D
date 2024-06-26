@@ -5,8 +5,11 @@ using UnityEngine.UI;
 
 public class WarriorClass : MonoBehaviour
 {
-    private Move moveScr;
-    private Animator animator; //assigned in script
+    //assigned in script
+    private Move moveScript;
+    private Animator animator; 
+    //  //  //  //
+
     public bool canAttack;
     public Collider2D enemyCollider;
 
@@ -35,9 +38,9 @@ public class WarriorClass : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        moveScr = GetComponent<Move>();
-        moveScr.playerClass = Move.Class.Warrior;
-        animator = moveScr.animator;
+        moveScript = GetComponent<Move>();
+        //moveScript.playerClass = Move.Class.Warrior; //bu artik Playerda
+        animator = moveScript.animator;
         //sword = transform.GetChild(0).GetComponent<Sword>();
 
         shieldIcon.fillAmount = 0;
@@ -127,7 +130,7 @@ public class WarriorClass : MonoBehaviour
     {
         swordCooldownLeft = atkCooldown;
         //sword in the right direction = swords[move.direction]
-        Sword currentSword = swords[moveScr.direction];
+        Sword currentSword = swords[moveScript.direction];
         currentSword.DamageEnemies(swordDamage);
         //if in range, enemy game object.damage
         animator.SetTrigger("Attack");
@@ -137,7 +140,7 @@ public class WarriorClass : MonoBehaviour
     {
         specialCooldownLeft = specialCooldown;
         animator.SetTrigger("Attack");
-        int direction = moveScr.direction;
+        int direction = moveScript.direction;
         GameObject newArrow = null;
         //Instantiate blue arrow
         switch (direction)
@@ -172,53 +175,4 @@ public class WarriorClass : MonoBehaviour
 #endif
         }
     }
-
-    #region old warrior
-    IEnumerator oldAttack()
-    {
-        //cooldownAtk = true;
-        swordCooldownLeft = atkCooldown;
-        moveScr.animator.SetTrigger("Attack");
-        if (sword.inRange)
-        {
-            //enemyCollider.GetComponent<PlayerMove>().takeDamage(swordDamage);
-            //find better efficiency in sword
-            //enemyCollider.gameObject.GetComponent<PlayerMove>().hp -= swordDamage;
-            //enemyCollider.gameObject.GetComponent<SpriteRenderer>().color = new Color(255f, 87f, 87f, 255f);
-            print("damage enemy");
-        }
-        yield return new WaitForSeconds(atkCooldown);
-        //cooldownAtk = false;
-        swordCooldownLeft = 0;
-    }
-
-    IEnumerator oldSpecialAttack()
-    {
-        //cooldownUlt = true;
-        specialCooldownLeft = specialCooldown;
-        moveScr.animator.SetTrigger("Attack");
-        GameObject newArrow = Instantiate(rightArrow,
-            new Vector3(transform.position.x + 0.4f //* moveScr.orientation
-            , transform.position.y + 0.2f, transform.position.z),
-            Quaternion.identity);
-        Arrow arrowScript = newArrow.GetComponent<Arrow>();
-        //arrowScript.orientation = gameObject.GetComponent<PlayerMove>().orientation;
-        arrowScript.arrowDamage = specialDamage;
-
-        //if (player1)
-        //{
-        //    newArrow.GetComponent<Arrow>().enemyTag = "PlayerTwo";
-        //}
-        //else if (player2)
-        //{
-        //    newArrow.GetComponent<Arrow>().enemyTag = "PlayerOne";
-        //}
-        newArrow.SetActive(true);
-        yield return new WaitForSeconds(specialCooldown);
-        specialCooldownLeft = 0;
-        //cooldownUlt = false;
-    }
-    #endregion
-
-
 }
