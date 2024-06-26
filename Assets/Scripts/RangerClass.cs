@@ -58,7 +58,7 @@ public class RangerClass : MonoBehaviour
         }
         ultArrowIcon.fillAmount = ultSeconds / cdUlt;
 
-        if (moveScr.inputOn)
+        if (moveScr.canMove)
         {
             if (vanishing) { }
             else if (InputAttack() && !cooldownAtk)

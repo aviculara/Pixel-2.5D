@@ -7,7 +7,7 @@ public class InventoryManager : MonoBehaviour
 {
     
     public InventorySlot[] inventory; //array, fixed size
-    public int[] itemCount = new int[5];
+    public int[] itemCount = new int[5]; //bu neydi hatirlamiyorum
     public GameObject inventoryIconPrefab;
     public RectTransform selectionBorder;
     public RectTransform parent;
@@ -15,6 +15,8 @@ public class InventoryManager : MonoBehaviour
     private int slotsInHand = 6;
 
     int selectedSlot = 0;
+
+    [SerializeField] private Player player;
     
 
     void Start()
@@ -25,14 +27,7 @@ public class InventoryManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SelectSlot(0);
-        }
-        else if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SelectSlot(1);
-        }
+        KeyboardSelect();
 
         if(Input.mouseScrollDelta.y > 0)
         {
@@ -99,15 +94,26 @@ public class InventoryManager : MonoBehaviour
         try
         {
             //select new slot
-            if (inventory[newSlot].Select())
+            inventory[newSlot].Select();
+
+            //deselect old slot
+            if (newSlot != selectedSlot)
             {
-                //deselect old slot
-                if (newSlot != selectedSlot)
-                {
-                    inventory[selectedSlot].Deselect();
-                    selectedSlot = newSlot;
-                }
+                inventory[selectedSlot].Deselect();
+                selectedSlot = newSlot;
             }
+
+            ItemIcon itemInSlot = inventory[newSlot].GetComponentInChildren<ItemIcon>();
+            if(itemInSlot != null)
+            {
+                int itemID = itemInSlot.itemScriptable.itemID;
+                HoldItem(itemID);
+            }
+            else
+            {
+                player.Empty();
+            }
+
         }
         catch(Exception e)
         {
@@ -119,5 +125,58 @@ public class InventoryManager : MonoBehaviour
     public void DeselectSlot()
     {
         inventory[selectedSlot].Deselect();
+    }
+
+    private void KeyboardSelect()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SelectSlot(0);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SelectSlot(1);
+        }
+        else if(Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            SelectSlot(2);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            SelectSlot(3);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            SelectSlot(4);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            SelectSlot(5);
+        }
+    }
+
+    private void HoldItem(int itemID)
+    {
+        if(itemID == 0)
+        {
+            print("unidentified item");
+            player.Empty();
+        }
+        else if(itemID == 1) //sword
+        {
+            player.WeaponSelect();
+        }
+        else if(itemID == 2) //pickaxe
+        {
+            player.PickaxeSelect();
+        }
+        else if(itemID == 3) //axe
+        {
+            player.AxeSelect();
+        }
+        else
+        {
+            player.Empty();
+        }
     }
 }

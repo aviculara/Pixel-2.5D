@@ -7,7 +7,7 @@ public class WarriorClass : MonoBehaviour
 {
     private Move moveScr;
     private Animator animator; //assigned in script
-    public bool inputOn;
+    public bool canAttack;
     public Collider2D enemyCollider;
 
     [Header("Attack")]
@@ -49,7 +49,7 @@ public class WarriorClass : MonoBehaviour
         leftArrow.SetActive(false);
         upArrow.SetActive(false);
 
-        inputOn = true; //temp
+        canAttack = true; //temp
     }
 
     // Update is called once per frame
@@ -66,7 +66,7 @@ public class WarriorClass : MonoBehaviour
         }
         specialIcon.fillAmount = specialCooldownLeft/ specialCooldown;
         
-        if(inputOn)
+        if(canAttack)
         {
             if(InputSecondary())
             {

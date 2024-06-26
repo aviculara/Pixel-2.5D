@@ -29,24 +29,11 @@ public class InventorySlot : MonoBehaviour, IDropHandler
 
     public void Deselect()
     {
-        //ItemIcon itemInSlot = GetComponentInChildren<ItemIcon>();
-        //if (itemInSlot!= null)
-        //{
-        //    itemInSlot.Deselect();
-        //}
         selectionBorder.SetActive(false);
     }
 
     public bool Select()
-    {
-        //ItemIcon itemInSlot = GetComponentInChildren<ItemIcon>();
-        //if (itemInSlot != null)
-        //{
-        //    itemInSlot.Select();
-        //    return true;
-        //}
-        //print("no item in slot");
-        //return false;        
+    {     
         selectionBorder.SetActive(true);
         return true;
     }
