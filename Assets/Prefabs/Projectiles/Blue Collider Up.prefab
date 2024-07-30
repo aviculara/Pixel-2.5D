@@ -121,7 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemyTag: 
   fireSpeed: 6
-  arrowDamage: 0
+  arrowDamage: 20
   direction: 0
 --- !u!1 &5152815328868080107
 GameObject:

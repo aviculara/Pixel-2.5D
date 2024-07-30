@@ -17,11 +17,13 @@ public class InventoryManager : MonoBehaviour
     int selectedSlot = 0;
 
     [SerializeField] private Player player;
-    
+    [SerializeField] ItemScriptable wood;
 
     void Start()
     {
         SelectSlot(0);
+        FindEmptySlot(wood);
+        FindEmptySlot(wood);
     }
 
     // Update is called once per frame
@@ -60,7 +62,7 @@ public class InventoryManager : MonoBehaviour
                 if (itemInSlot != null && itemScriptable == item && itemInSlot.count < maxStack)
                 {
                     itemInSlot.updateCount();
-                    itemCount[itemScriptable.itemID]++;
+                    //itemCount[itemScriptable.itemID]++;
                     return true;
                 }
             }

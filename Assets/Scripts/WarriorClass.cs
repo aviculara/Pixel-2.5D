@@ -164,7 +164,10 @@ public class WarriorClass : MonoBehaviour
         }
         if(newArrow != null)
         {
-            newArrow.GetComponent<Arrow>().SetDirection(direction);
+           
+            Arrow arrowScript = newArrow.GetComponent<Arrow>(); 
+            arrowScript.SetDirection(direction);
+            arrowScript.enemyTag = "Enemy";
             newArrow.SetActive(true);
             Destroy(newArrow, 5f);
         }

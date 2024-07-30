@@ -44,6 +44,7 @@ public class Sword : MonoBehaviour
         {
             //find enemy script and do damage
             print("did " + damage + " damage to " + enemy.name);
+            enemy.GetComponentInChildren<HP>().TakeDamage();
         }
     }
 }

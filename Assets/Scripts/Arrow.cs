@@ -21,17 +21,17 @@ public class Arrow : MonoBehaviour
         transform.Translate(directionVector * Time.deltaTime * fireSpeed);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag(enemyTag))
         {
-            //other.GetComponent<PlayerMove>().takeDamage(arrowDamage);
-            //Destroy(this.gameObject);
-        }
-        else if(other.CompareTag("Wall"))
-        {
+            other.GetComponent<HP>().TakeDamage();
             Destroy(this.gameObject);
         }
+        //else if(other.CompareTag("Wall"))
+        //{
+        //    Destroy(this.gameObject);
+        //}
         
     }
 
