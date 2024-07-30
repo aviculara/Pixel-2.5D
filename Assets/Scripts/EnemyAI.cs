@@ -15,6 +15,10 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] Transform player;
     //[SerializeField] bool ranged = true;
 
+    private Vector3[] directionPoints = new Vector3[8];
+    private float[] distanceToPlayer = new float[8];
+    private int[] directionWeights = new int[8];
+
     public enum State
     {
         Roam,
@@ -25,34 +29,46 @@ public class EnemyAI : MonoBehaviour
     void Start()
     {
         startingPosition = transform.position;
-        roamingPosition = GetRoamingPosition();
+        //roamingPosition = GetRoamingPosition();
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch(state)
+        transform.position = Vector3.MoveTowards(transform.position, roamingPosition, speed * Time.deltaTime);
+        float minDistance = 1f;
+        if(Vector3.Distance(transform.position, roamingPosition) < minDistance)
         {
-            default:
-                transform.position = Vector3.MoveTowards(transform.position, roamingPosition, speed * Time.deltaTime);
-                float minDistance = 1f;
-                if(Vector3.Distance(transform.position, roamingPosition) < minDistance)
-                {
-                    roamingPosition = GetRoamingPosition();
-                }
-                FindTarget();
-                break;
-            case State.Attack:
-                //attack
-
-                FindTarget();
-                break;
-            case State.Follow:
-                //follow
-                transform.position = Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
-                FindTarget();
-                break;
+            roamingPosition = TempRoamingPosition();
         }
+        //switch(state)
+        //{
+        //    default:
+        //        transform.position = Vector3.MoveTowards(transform.position, roamingPosition, speed * Time.deltaTime);
+        //        float minDistance = 1f;
+        //        if(Vector3.Distance(transform.position, roamingPosition) < minDistance)
+        //        {
+        //            roamingPosition = GetRoamingPosition();
+        //        }
+        //        //FindTarget();
+        //        break;
+        //    case State.Attack:
+        //        //attack
+
+        //        FindTarget();
+        //        break;
+        //    case State.Follow:
+        //        //follow
+        //        transform.position = Vector3.MoveTowards(transform.position, player.position, speed * Time.deltaTime);
+        //        FindTarget();
+        //        break;
+        //}
+    }
+
+    private Vector3 TempRoamingPosition()
+    {
+        float randomDistance = Random.Range(2f, 10f);
+        return transform.position + EightDirectionsToVector(WeightedRandomDirection()) * randomDistance;
     }
 
     public Vector3 RandomDirection()
@@ -66,7 +82,8 @@ public class EnemyAI : MonoBehaviour
     {
         //a random position is created by a random direction and a random distance
         float randomDistance = Random.Range(2f, 10f);
-        Vector3 newRoamPosition = startingPosition + NewNearbyDirection() * randomDistance;
+        //Vector3 newRoamPosition = startingPosition + NewNearbyDirection() * randomDistance;
+        Vector3 newRoamPosition = transform.position + NewNearbyDirection() * randomDistance;
         //print("moving " + randomDistance);
         return newRoamPosition;
     }
@@ -84,6 +101,7 @@ public class EnemyAI : MonoBehaviour
         Vector3 directionVector;
         newDirection = Random.Range(-2, 2) + direction * 2;
         newDirection = newDirection % 8;
+        print(newDirection);
         directionVector = EightDirectionsToVector(newDirection);
         direction = SetDirectionByEight(newDirection);
         return directionVector;
@@ -185,5 +203,88 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
         return dir;
+    }
+
+    public int WeightedRandomDirection()
+    {
+        //calculate the position of the 8 points, write into the array
+        SetDirectionPoints(startingPosition);
+        //calculate the weight of the 8 points based on their distance to target
+        SetDirectionWeights();
+        //pick a random direction with the weights
+        int totalWeight = 0;
+        for(int i = 0; i < directionWeights.Length; i++)
+        {
+            totalWeight += directionWeights[i];
+        }
+        int randomValue = Random.Range(0, totalWeight);
+        for(int i=0; i < directionWeights.Length; i++)
+        {
+            if(randomValue < directionWeights[i])
+            {
+                return i;
+            }
+            else
+            {
+                randomValue -= directionWeights[i];
+            }
+        }
+        print("random overshoot");
+        return 0;
+    }
+
+    public void SetDirectionPoints(Vector3 target)
+    {
+        /* 
+         * Calculates the points unit distance away from enemy in 8 directions
+         * Also calculates distance of those points to player 
+         */
+        //Vector3 playerPos = player.transform.position;
+        //print(transform.position);
+        for(int i = 0; i < directionPoints.Length; i++)
+        {
+            directionPoints[i] = transform.position + EightDirectionsToVector(i);
+            distanceToPlayer[i] = Vector3.Distance(directionPoints[i], target); //this might need to seperate
+            //print(directionPoints[i]);
+        }
+    }
+
+    public void SetDirectionWeights()
+    {   /* gives weights to the 8 possible directions based on how close they are to player
+         * 
+         * best direction weight = 100        worst direction weight = 1
+         * in direction of player = 75        away from player = 25
+         */
+
+        int maxDistanceIndex = 0;
+        int minDistanceIndex = 0;
+        float currentDistance = Vector3.Distance(transform.position, player.position);
+        for(int i = 0; i < directionPoints.Length; i++)
+        {
+            if(distanceToPlayer[i] < distanceToPlayer[minDistanceIndex])
+            {
+                minDistanceIndex = i;
+            }
+            else if(distanceToPlayer[i] > distanceToPlayer[maxDistanceIndex])
+            {
+                maxDistanceIndex = i;
+            }
+
+            if(currentDistance > distanceToPlayer[i])   //this direction moves enemy closer to player
+            {
+                directionWeights[i] = 75;
+            }
+            else if(currentDistance < distanceToPlayer[i])  //this direction moves enemy further from player
+            {
+                directionWeights[i] = 25;
+            }
+            else
+            {
+                directionWeights[i] = 50;
+            }
+        }
+        directionWeights[maxDistanceIndex] = 1;
+        directionWeights[minDistanceIndex] = 100;
+        print("best direction is " + minDistanceIndex + " , worst direction is " + maxDistanceIndex);
     }
 }
