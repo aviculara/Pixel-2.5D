@@ -210,7 +210,7 @@ public class EnemyAI : MonoBehaviour
         //calculate the position of the 8 points, write into the array
         SetDirectionPoints(startingPosition);
         //calculate the weight of the 8 points based on their distance to target
-        SetDirectionWeights();
+        SetDirectionWeights(startingPosition);
         //pick a random direction with the weights
         int totalWeight = 0;
         for(int i = 0; i < directionWeights.Length; i++)
@@ -249,8 +249,8 @@ public class EnemyAI : MonoBehaviour
         }
     }
 
-    public void SetDirectionWeights()
-    {   /* gives weights to the 8 possible directions based on how close they are to player
+    public void SetDirectionWeights(Vector3 target)
+    {   /* gives weights to the 8 possible directions based on how close they are to target
          * 
          * best direction weight = 100        worst direction weight = 1
          * in direction of player = 75        away from player = 25
@@ -258,7 +258,7 @@ public class EnemyAI : MonoBehaviour
 
         int maxDistanceIndex = 0;
         int minDistanceIndex = 0;
-        float currentDistance = Vector3.Distance(transform.position, player.position);
+        float currentDistance = Vector3.Distance(transform.position, target);
         for(int i = 0; i < directionPoints.Length; i++)
         {
             if(distanceToPlayer[i] < distanceToPlayer[minDistanceIndex])
@@ -285,6 +285,6 @@ public class EnemyAI : MonoBehaviour
         }
         directionWeights[maxDistanceIndex] = 1;
         directionWeights[minDistanceIndex] = 100;
-        print("best direction is " + minDistanceIndex + " , worst direction is " + maxDistanceIndex);
+        //print("best direction is " + minDistanceIndex + " , worst direction is " + maxDistanceIndex);
     }
 }
