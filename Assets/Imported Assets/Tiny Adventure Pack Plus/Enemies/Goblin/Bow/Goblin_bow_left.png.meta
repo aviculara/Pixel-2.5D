@@ -178,9 +178,9 @@ TextureImporter:
       name: Goblin_bow_left_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 1
         y: 0
-        width: 14
+        width: 13
         height: 16
       alignment: 7
       pivot: {x: 0.5, y: 0}
@@ -199,9 +199,9 @@ TextureImporter:
       name: Goblin_bow_left_1
       rect:
         serializedVersion: 2
-        x: 15
+        x: 17
         y: 0
-        width: 16
+        width: 13
         height: 16
       alignment: 7
       pivot: {x: 0.5, y: 0}
@@ -220,9 +220,9 @@ TextureImporter:
       name: Goblin_bow_left_2
       rect:
         serializedVersion: 2
-        x: 31
+        x: 33
         y: 0
-        width: 16
+        width: 13
         height: 16
       alignment: 7
       pivot: {x: 0.5, y: 0}
@@ -241,9 +241,9 @@ TextureImporter:
       name: Goblin_bow_left_3
       rect:
         serializedVersion: 2
-        x: 48
+        x: 49
         y: 0
-        width: 16
+        width: 14
         height: 16
       alignment: 7
       pivot: {x: 0.5, y: 0}
@@ -262,9 +262,9 @@ TextureImporter:
       name: Goblin_bow_left_4
       rect:
         serializedVersion: 2
-        x: 64
+        x: 65
         y: 0
-        width: 16
+        width: 14
         height: 16
       alignment: 7
       pivot: {x: 0.5, y: 0}
@@ -283,9 +283,9 @@ TextureImporter:
       name: Goblin_bow_left_5
       rect:
         serializedVersion: 2
-        x: 80
+        x: 81
         y: 0
-        width: 16
+        width: 14
         height: 16
       alignment: 7
       pivot: {x: 0.5, y: 0}
