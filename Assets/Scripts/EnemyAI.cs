@@ -7,7 +7,7 @@ public class EnemyAI : MonoBehaviour
     private Vector3 startingPosition; //of the game object. don't change in code
     private Vector3 movingPosition;
     private State state = State.Roam;
-    public int direction = 0;
+    public int direction = 0;   // for animator
     private int directionOfPlayer = 0;
 
     [SerializeField] float speed = 2.5f;
@@ -18,6 +18,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] float deaggroRange = 50f;
     [SerializeField] float lineOfSightRange = 10f;
     [SerializeField] Transform player;
+    [SerializeField] Animator animator;
     //[SerializeField] bool ranged = true;
 
     [SerializeField] GameObject rightArrow, downArrow, leftArrow, upArrow;
@@ -132,41 +133,41 @@ public class EnemyAI : MonoBehaviour
     }
 
     #region old
-    public Vector3 RandomDirection()
-    {
-        //characters are on x-z plane
-        Vector3 randomDir = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
-        return randomDir;
-    }
+    //public Vector3 RandomDirection()
+    //{
+    //    //characters are on x-z plane
+    //    Vector3 randomDir = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f, 1f)).normalized;
+    //    return randomDir;
+    //}
 
-    private Vector3 GetRoamingPosition()
-    {
-        //a random position is created by a random direction and a random distance
-        float randomDistance = Random.Range(2f, 10f);
-        //Vector3 newRoamPosition = startingPosition + NewNearbyDirection() * randomDistance;
-        Vector3 newRoamPosition = transform.position + NewNearbyDirection() * randomDistance;
-        //print("moving " + randomDistance);
-        return newRoamPosition;
-    }
+    //private Vector3 GetRoamingPosition()
+    //{
+    //    //a random position is created by a random direction and a random distance
+    //    float randomDistance = Random.Range(2f, 10f);
+    //    //Vector3 newRoamPosition = startingPosition + NewNearbyDirection() * randomDistance;
+    //    Vector3 newRoamPosition = transform.position + NewNearbyDirection() * randomDistance;
+    //    //print("moving " + randomDistance);
+    //    return newRoamPosition;
+    //}
 
-    private Vector3 NewNearbyDirection()
-    {
-        //     3
-        // 2 - + - 4 (0) 
-        //     1
-        // pick a random number between -2 and +2, divide by 2, add to current direction
-        // .5 values represent diagonal directions
-        // mod 4 of the new direction represents its direction value for the animator
-        // right : Vector3(1,0,0)   ||  up : Vector3(0,0,1) 
-        int newDirection;
-        Vector3 directionVector;
-        newDirection = Random.Range(-2, 2) + direction * 2; //problem
-        newDirection = PositiveMod(newDirection,8);
-        print(newDirection);
-        directionVector = EightDirectionsToVector(newDirection);
-        direction = SetDirectionByEight(newDirection);
-        return directionVector;
-    }
+    //private Vector3 NewNearbyDirection()
+    //{
+    //    //     3
+    //    // 2 - + - 4 (0) 
+    //    //     1
+    //    // pick a random number between -2 and +2, divide by 2, add to current direction
+    //    // .5 values represent diagonal directions
+    //    // mod 4 of the new direction represents its direction value for the animator
+    //    // right : Vector3(1,0,0)   ||  up : Vector3(0,0,1) 
+    //    int newDirection;
+    //    Vector3 directionVector;
+    //    newDirection = Random.Range(-2, 2) + direction * 2; //problem
+    //    newDirection = PositiveMod(newDirection,8);
+    //    print(newDirection);
+    //    directionVector = EightDirectionsToVector(newDirection);
+    //    direction = SetDirectionByEight(newDirection);
+    //    return directionVector;
+    //}
 
     #endregion
 
@@ -256,35 +257,35 @@ public class EnemyAI : MonoBehaviour
         return directionVector.normalized;
     }
 
-    public int SetDirectionByEight(int directionCode)
-    {
-        int dir;
-        //prioritizes up-down
-        switch(directionCode)
-        {
-            case 0: //right
-                dir = 0;
-                break;
-            case 1: //down-right
-            case 2: //down
-            case 3: //down-left
-                dir = 1;
-                break;
-            case 4: //left
-                dir = 2;
-                break;
-            case 5: //up-left
-            case 6: //up
-            case 7: //up-right
-                dir = 3;
-                break;
-            default:
-                dir = 0;
-                print("invalid direction, " + directionCode);
-                break;
-        }
-        return dir;
-    }
+    //public int SetDirectionByEight(int directionCode)
+    //{
+    //    int dir;
+    //    //prioritizes up-down
+    //    switch(directionCode)
+    //    {
+    //        case 0: //right
+    //            dir = 0;
+    //            break;
+    //        case 1: //down-right
+    //        case 2: //down
+    //        case 3: //down-left
+    //            dir = 1;
+    //            break;
+    //        case 4: //left
+    //            dir = 2;
+    //            break;
+    //        case 5: //up-left
+    //        case 6: //up
+    //        case 7: //up-right
+    //            dir = 3;
+    //            break;
+    //        default:
+    //            dir = 0;
+    //            print("invalid direction, " + directionCode);
+    //            break;
+    //    }
+    //    return dir;
+    //}
 
     private void SetDirectionVectors()
     {
@@ -300,7 +301,7 @@ public class EnemyAI : MonoBehaviour
     //    SetDistances(startingPosition);
     //    //calculate the weight of the 8 points based on their distance to target
     //    SetDirectionWeights(startingPosition);
-    //    CheckLineOfSight();
+    //    WeightLineOfSight();
     //    //pick a random direction with the weights
     //    int totalWeight = 0;
     //    for(int i = 0; i < directionWeights.Length; i++)
@@ -338,7 +339,7 @@ public class EnemyAI : MonoBehaviour
         SetDistances(targetVector);
         //calculate the weight of the 8 points based on their distance to target
         SetDirectionWeights(targetVector);
-        CheckLineOfSight();
+        WeightLinesOfSight();
         //pick a random direction with the weights
         int totalWeight = 0;
         for(int i = 0; i < directionWeights.Length; i++)
@@ -351,7 +352,8 @@ public class EnemyAI : MonoBehaviour
             if(randomValue < directionWeights[i])
             {
                 //print("chose direction " + i);
-                direction = SetDirectionByEight(i);
+                //direction = SetDirectionByEight(i);
+                direction = i;
                 return directionVectors[i];
             }
             else
@@ -360,7 +362,8 @@ public class EnemyAI : MonoBehaviour
             }
         }
         print("random overshoot");
-        direction = SetDirectionByEight(0);
+        //direction = SetDirectionByEight(0);
+        direction = 0;
         return directionVectors[0];
     }
     public void SetDistances(Vector3 target)
@@ -445,7 +448,7 @@ public class EnemyAI : MonoBehaviour
 
     }
 
-    public void CheckLineOfSight() //needs to change
+    private void WeightLinesOfSight()
     {
         /*
          * reduce weights if obstacle within line of sight
@@ -501,13 +504,18 @@ public class EnemyAI : MonoBehaviour
         /*
          * check if player is in an attackable direction
          * out the direction of player
+         * obstacles need to be in same layer as player to detect and avoid obstacles
          */
         directionOfPlayer = 4;
+        //int[] attackDirectionWeights = new int[4];
         float leastDistance = 100f;
 
         //is player within targeting range
         for(int i = 0; i< directionVectors.Length; i +=2)
         {
+            directionWeights[i] = 0;
+            float distanceToPlayer;
+            int attackWeight;
             //perpendicular directions are at +2 and -2 index (mod 8) of the direction vectors
             //Vector3 centerPosition = transform.position;
             Vector3 clockwisePosition = transform.position + directionVectors[PositiveMod(i + 2 , 8)] * attackSpread/2;
@@ -525,35 +533,53 @@ public class EnemyAI : MonoBehaviour
                 {
                     //shoot player in this direction
                     directionOfPlayer = i;
-                    //print("I am shooting " + hit.transform.name + "in direction " + directionOfPlayer);
+                    print("Found " + hit.transform.name + "in direction " + directionOfPlayer);
                     return true;
+                }
+                else if(hit.transform.CompareTag("Obstacle"))
+                {
+                    print("found obstacle in direction " + i);
+                    directionWeights[i] = 0;
+                    //don't go in this direction
                 }
             }
             else 
             {
-                float distanceToPlayer = Vector3.Distance(transform.position + directionVectors[i] * attackRange, player.position);
+                distanceToPlayer = Vector3.Distance(transform.position + directionVectors[i] * attackRange, player.position);
+                //attackWeight = (int)((deaggroRange - distanceToPlayer)*10);
+                //print(distanceToPlayer + " with weight " + attackWeight);
+                //directionWeights[i] = attackWeight;
+
                 if(distanceToPlayer < leastDistance)
                 {
                     leastDistance = distanceToPlayer;
                     directionOfPlayer = i;
                 }
             }
+            //i++;
+            //directionWeights[i] = 0;
+            ////distanceToPlayer = Vector3.Distance(transform.position + directionVectors[i] * attackRange, player.position);
+            ////attackWeight = (int)((deaggroRange - distanceToPlayer) * 10);
+            ////print(distanceToPlayer + " with weight " + attackWeight);
+            ////directionWeights[i] = attackWeight;
 
         }
-
+        print("so far best direction is " + directionOfPlayer);
         //player isnt within targeting range, return false and out best direction to move
         if(
-            Vector3.Distance(transform.position + directionVectors[PositiveMod(directionOfPlayer + 2 , 8)] * attackRange, player.position) //perpendicular cw direction
+            Vector3.Distance(transform.position + directionVectors[PositiveMod(directionOfPlayer + 2, 8)] * attackRange, player.position) //perpendicular cw direction
             >
             Vector3.Distance(transform.position + directionVectors[PositiveMod(directionOfPlayer - 2, 8)] * attackRange, player.position)) //perpendicular ccw direction
         {
-            directionOfPlayer = PositiveMod((directionOfPlayer - 2) ,8);
+            directionOfPlayer = PositiveMod((directionOfPlayer - 2), 8);
         }
         else
         {
             directionOfPlayer = PositiveMod((directionOfPlayer + 2), 8);
         }
-
+        //WeightLinesOfSight();
+        //directionOfPlayer = ArrayMax(directionWeights);
+        print("player is in direction " + directionOfPlayer);
         return false;
     }
 
@@ -567,4 +593,31 @@ public class EnemyAI : MonoBehaviour
         return result;
     }
 
+    public static int ArrayMax(int[] array)
+    {
+        int maxIndex = 0;
+        for(int i = 0; i < array.Length; i++)
+        {
+            if(array[i] > array[maxIndex])
+            {
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
+    }
+
+    private void OnEnter(Collider other)
+    {
+        
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.transform.CompareTag("Obstacle"))
+        {
+            state = State.Follow;
+            movingPosition = NewFollowingDirection();
+            print("switched to following");
+        }
+    }
 }
